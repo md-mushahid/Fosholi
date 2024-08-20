@@ -7,7 +7,7 @@ const SignupPage = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (fullName.length < 1) {
@@ -32,7 +32,6 @@ const SignupPage = () => {
           fullName,
           email,
           password,
-          isAgree,
         }),
       });
 
@@ -41,7 +40,6 @@ const SignupPage = () => {
         setFullName('');
         setEmail('');
         setPassword('');
-        setIsAgree(false);
       } else {
         console.error('Signup failed:', response.status, response.statusText);
       }
