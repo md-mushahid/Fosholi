@@ -1,6 +1,25 @@
-import Link from "next/link";
 
+"use client"
+import Link from "next/link";
+import { useState } from "react";
 const Hero = () => {
+  const [data, setData] = useState('');
+
+  const handleClick = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:3333/');
+      
+      if (response.ok) {
+        const result = await response.text(); // Parse the response as text
+        setData(result); // Set the data state with the result
+      } else {
+        console.error('HTTP error:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
   return (
     <>
       <section
@@ -14,16 +33,14 @@ const Hero = () => {
                 <h1 className="mb-5 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight">
                   Fosholi
                 </h1>
+                
                 <p className="mb-12 text-base !leading-relaxed text-body-color dark:text-body-color-dark sm:text-lg md:text-xl">
                   We Dream A Better World For Everyone
                 </p>
                 <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-                  <Link
-                    href="https://github.com/NextJSTemplates/startup-nextjs"
-                    className="inline-block rounded-sm bg-black px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-black/90 dark:bg-white/10 dark:text-white dark:hover:bg-white/5"
-                  >
-                    Star on GitHub
-                  </Link>
+
+                    <button onClick={handleClick}>{data} Hello</button>
+                  
                 </div>
               </div>
             </div>
