@@ -1,14 +1,28 @@
+"use client"
 import Link from "next/link";
-
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Sign In Page | Free Next.js Template for Startup and SaaS",
-  description: "This is Sign In Page for Startup Nextjs Template",
-  // other metadata
-};
+import { useState } from "react";
+import axios from 'axios';
 
 const SigninPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleclick = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3333/admin/login', {
+        email,
+        password,
+      });
+
+      console.log('Response', response.data);
+      localStorage.setItem('token', response.data.token);
+
+    } catch (error) {
+      console.error('Login failed:', error.response?.data?.message || 'An error occurred');
+    }
+  };
+
   return (
     <>
       <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
@@ -32,6 +46,8 @@ const SigninPage = () => {
                     </label>
                     <input
                       type="email"
+                      value={email}
+                      onChange={(e)=> setEmail(e.target.value)}
                       name="email"
                       placeholder="Enter your Email"
                       className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
@@ -47,12 +63,14 @@ const SigninPage = () => {
                     <input
                       type="password"
                       name="password"
+                      value={password}
+                      onChange={(e)=> setPassword(e.target.value)}
                       placeholder="Enter your Password"
                       className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                     />
                   </div>
                   <div className="mb-6">
-                    <button className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white duration-300 hover:bg-primary/90">
+                    <button onClick={handleclick} className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white duration-300 hover:bg-primary/90">
                       Sign in
                     </button>
                   </div>

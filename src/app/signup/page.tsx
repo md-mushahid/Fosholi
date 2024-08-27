@@ -1,13 +1,12 @@
 "use client"
 import Link from "next/link";
-import { Metadata } from "next";
 import { useState } from "react";
 
 const SignupPage = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (fullName.length < 1) {
