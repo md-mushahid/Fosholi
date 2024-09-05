@@ -1,6 +1,5 @@
 "use client"
 import Link from "next/link";
-import { Metadata } from "next";
 import { useState } from "react";
 
 const SignupPage = () => {
