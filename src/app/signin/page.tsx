@@ -1,40 +1,35 @@
-"use client"
+"use client";
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from 'next/navigation';
-import useGlobalData from '../../components/Hooks/useGlobalData';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import useGlobalState from "@/components/Hooks/useGlobalState";
 
 const SigninPage = () => {
-
-  const { loginUser, setLoginUser, updateGlobalData } = useGlobalData();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { setLoginUser } = useGlobalState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleSignIn = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:3333/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post("http://127.0.0.1:3333/admin/login", {
+        email,
+        password,
       });
-      if (response.ok) {
-        const user_data = await response.json();
-        const item = { id: user_data.id, name: user_data.name }
+
+      if (response.status === 200) {
+        const user_data = response.data;
+        const item = { id: user_data.id, name: user_data.name };
         setLoginUser(item);
-        console.log(user_data)
-        localStorage.setItem('login_user_data', JSON.stringify(item));
-        setEmail('');
-        setPassword('');
-        router.push('/');
+        localStorage.setItem("login_user_data", JSON.stringify(item));
+        window.location.href = '/dashboard';
       }
     } catch (error) {
-      console.error('Error during signin:', error);
+      console.error("Error during signin:", error);
     }
-  }
-  
+  };
+
   return (
     <>
       <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
@@ -48,7 +43,8 @@ const SigninPage = () => {
                 <p className="mb-11 text-center text-base font-medium text-body-color">
                   Login to your account for a faster checkout.
                 </p>
-                <form>
+                {/* Remove preventDefault and use form with POST method */}
+                <form method="POST">
                   <div className="mb-8">
                     <label
                       htmlFor="email"
@@ -60,7 +56,7 @@ const SigninPage = () => {
                       type="email"
                       name="email"
                       value={email}
-                      onChange={(e)=> setEmail(e.target.value)}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your Email"
                       className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                     />
@@ -76,13 +72,17 @@ const SigninPage = () => {
                       type="password"
                       name="password"
                       value={password}
-                      onChange={(e)=> setPassword(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your Password"
                       className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                     />
                   </div>
                   <div className="mb-6">
-                    <button onClick={handleSignIn} className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white duration-300 hover:bg-primary/90">
+                    <button
+                      type="button"
+                      onClick={handleSignIn}
+                      className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white duration-300 hover:bg-primary/90"
+                    >
                       Sign in
                     </button>
                   </div>

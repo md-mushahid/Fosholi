@@ -5,16 +5,17 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import ThemeToggler from "./ThemeToggler";
 import menuData from "./menuData";
-import useGlobalData from "../Hooks/useGlobalData";
+import useGlobalState from "../Hooks/useGlobalState";
 
 const Header = () => {
-  // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
+  const { loginUser, setLoginUser } = useGlobalState();
+  const [sticky, setSticky] = useState(false);
+
+
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen);
   };
-  const { loginUser, setLoginUser } = useGlobalData();
-  const [sticky, setSticky] = useState(false);
   const handleStickyNavbar = () => {
     if (window.scrollY >= 80) {
       setSticky(true);
@@ -26,7 +27,15 @@ const Header = () => {
     window.addEventListener("scroll", handleStickyNavbar);
   });
 
-  // submenu handler
+  useEffect(() => {
+    const handleStickyNavbar = () => {
+      setSticky(window.scrollY >= 80);
+    };
+
+    window.addEventListener('scroll', handleStickyNavbar);
+    return () => window.removeEventListener('scroll', handleStickyNavbar);
+  }, []);
+
   const [openIndex, setOpenIndex] = useState(-1);
   const handleSubmenu = (index) => {
     if (openIndex === index) {
@@ -38,8 +47,8 @@ const Header = () => {
 
   const handleLogOut = () => {
     setLoginUser(null);
-    localStorage.clear();
-  }
+    sessionStorage.removeItem('login_user_data');
+  };
 
   const usePathName = usePathname();
 
@@ -130,7 +139,7 @@ const Header = () => {
               <div className="flex items-center justify-end pr-16 lg:pr-0">
                 {
                   loginUser ? <Link
-                  href="/"
+                  href="/dashboard"
                   className="hidden px-7 py-3 text-base font-medium text-dark hover:opacity-70 dark:text-white md:block"
                 >
                   {loginUser.name}

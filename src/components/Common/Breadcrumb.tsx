@@ -14,11 +14,18 @@ const Breadcrumb = ({
           <div className="-mx-4 flex flex-wrap items-center">
             <div className="w-full px-4 md:w-8/12 lg:w-7/12">
               <div className="mb-8 max-w-[570px] md:mb-0 lg:mb-12">
-                <h1 className="mb-5 text-2xl font-bold text-black dark:text-white sm:text-3xl">
+                {pageName == 'Blog Grid' ?
+                  <Link
+                  href="/blog"
+                  className="ease-in-up shadow-btn hover:shadow-btn-hover hidden rounded-sm bg-primary px-8 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:block md:px-9 lg:px-6 xl:px-9"
+              >
+                Write a Blog
+              </Link> :
+                  <h1 className="mb-5 text-2xl font-bold text-black dark:text-white sm:text-3xl">
                   {pageName}
-                </h1>
+                </h1>}
                 <p className="text-base font-medium leading-relaxed text-body-color">
-                  {description + "asdfsadf"}
+                  {description}
                 </p>
               </div>
             </div>
